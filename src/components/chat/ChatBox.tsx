@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
+// Automatically uses Render URL in production, localhost in development
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 type Message = {
   role: "user" | "ai";
   text: string;
@@ -44,7 +47,7 @@ export default function ChatBox() {
 
     const fetchHistory = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/chat/history/${userId}`);
+        const res = await fetch(`${API_BASE_URL}/api/chat/history/${userId}`);
         if (res.ok) {
           const data = await res.json();
           setMessages(data);
@@ -73,7 +76,7 @@ export default function ChatBox() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage, userId })
